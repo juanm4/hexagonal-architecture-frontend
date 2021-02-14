@@ -21,7 +21,7 @@ Table of contents:
 11. [ Final words ](#final)
 
 <a name="introduction"></a>
-## Introduction
+## Introduction :wave:
 There are multiple definitions for the term architecture, depending on the context, and the development branch you come from. For these reasons is complicated to reach a consensus and a single definition that is valid for all cases. So, according to frontend software development, and from a professional point of view, the definition could be the next:
 
 **Developers call architecture the set of development patterns that allow us to define guidelines to be followed in our software in terms of limits and restrictions. It is the guide that we must follow to order our code and make the different parts of the application communicate with each other.**
@@ -39,7 +39,7 @@ One of the most used patterns to design software architecture is Hexagonal Archi
 The purpose of this pattern is to divide our application in different layers, allowing it to evolve in an isolated way and making each entity responsible for a single functionality.
 
 <a name="why"></a>
-## Why is this architecture called hexagonal?
+## Why is this architecture called hexagonal? :thinking:
 
 The idea of representing this architecture with a hexagon is due to the ease of associating the theoretical concept with the visual concept.
 Inside this hexagon is where our base code is located. This part is called **domain**.
@@ -54,7 +54,7 @@ The communication between **domain** and the rest of actors is performed in the 
 One of the most recurrent question among professionals that see this architecture for the first time is: Why a hexagon? Well, the use of a hexagon is only a theoretical representation. The number of the services we could add is infinite, and we can integrate as many as we need.
 
 <a name="same"></a>
-## Same concept different names
+## Same concept different names :unamused:
 
 Hexagonal Architecture pattern is also called **Ports and Adapters**. This name come from a separation within a **infrastructure** layer, where we will have two sublayer:
 
@@ -68,21 +68,21 @@ So, our domain will make calls to the sublayer that corresponds to the port, bei
 The **Ports and Adapters** concept is very linked to object-oriented programming and to the use of interfaces, and maybe, the implementation of this pattern in functional programming could be different from the initial concept. In fact, it has arisen many patterns that iterate over this, such as **Onion architecture** or **Clean Architecture**. At the end the goal is the same: divide our application in layers, separating **domain** and **infrastructure**.
 
 <a name="maintainability"></a>
-## How does it affect maintainability?
+## How does it affect maintainability? :monocle_face:
 
 The fact of having our code separated in layers, where each of them has a single responsibility, it helps each layer to evolve in different ways, without impacting the others.
 
 Also, with this segmentation we get a high cohesion, where each layer will have single and unique responsibility well-defined inside the context of our software.
 
 <a name="frontend"></a>
-## How does it affect the frontend?
+## How does it affect the frontend? :open_mouth:
 
 There are currently a number of shortcomings in the use of methodologies when creating applications. Today, we have an incredible amount of tools that allow us to develop applications very fast, and at the same time, we have put the analysis and implementation of known and proven architectures on the back burner.
 
 Notwithstanding, even though this architectures may appear to be from the past, where the languages didn't evolve so fast, these architectures has been showed and adapted to give us the scalability we need to develop actual applications.
 
 <a name="historical"></a>
-## Historical context
+## Historical context :sleeping:
 
 Two decades ago desktop applications were the main tool to develop. In them, all our application was installed in the machine, through libraries, and there was a high coupling between view and behaviour.
 Then, we wanted to scale our applications to get a software more maintainable, whit centralized databases. So many of them were migrated to a server. With this, our desktop apps were reduced to a "fool" applications, which didn't require access, persistence or many data.
@@ -91,14 +91,14 @@ Finally, if the app needed some data, it had the responsibility to perform this 
 During the next years we got the web boom. Many desktop apps were adapted to the browsers, where the limitations were higher with only HTML. Later, JAVASCRIPT started to give more possibilities to the browser.
 
 <a name="present"></a>
-## Present
+## Present :relieved:
 
 The views had always been limited only to data representation and them had never needed higher functionalities, until now. With the common needs, frontend applications have more requirements than years ago. To name a few examples: state management, security, asynchrony, animations, integration with third party services...
 
 For all of these reasons, we need to start to apply patterns on these apps.
 
 <a name="consequences"></a>
-## Consequences
+## Consequences :partying_face:
 
 As we have said, the purpose of the frontend is mostly to visualize data. Despite this perception, it is NOT the **domain** of our application, but belongs to the outer layers of the implement architecture.
 
@@ -112,7 +112,7 @@ The data requests to backend belong to **infrastructure** layer, and it is somet
 Another part that belong to **infrastructure** is the management of local data, like session data, cookies or local databases. Of course, we have to deal with this, but it is not part of our **domain**.
 
 <a name="frameworks"></a>
-## What we do with frontend frameworks/libraries?
+## What we do with frontend frameworks/libraries? :sunglasses:
 
 Nowadays there is a huge amount of libraries for rendering: Angular, React, Vue...; but we must understand what their purpose is, so they should not enter the **domain**, but they should be handled into the **infrastructure**.
 
@@ -125,7 +125,7 @@ We can affirm that communication between **view (infrastructure)** and **domain*
 Once this is understood, we have to assume that tools highly coupled to these frontend libraries, like Redux or Vuex, must be managed in the **infrastructure** layer.
 
 <a name="example"></a>
-## Example of Hexagonal Architecture
+## Example of Hexagonal Architecture :rocket:
 
 Now it's the show time, let's try to put all this theory into practice through an example. Let's write some code.
 
@@ -149,7 +149,7 @@ Now imagine that we have the following business rules:
 - The maximum price of the cart must be 100 €
 
 <a name="examDir"></a>
-### Directories structure
+### Directories structure :card_index_dividers:
 
 Here we can see an example about how organize the directories, for both the "React" and "Vue" applications.
 
@@ -159,7 +159,7 @@ Here we can see an example about how organize the directories, for both the "Rea
 In both cases we have created two directories: domain and infrastructure. All visual components are allocated inside infrastructure (remember that views and representations don't belong to our domain).
 
 <a name="examDomain"></a>
-### Domain
+### Domain :shield:
 
 Now we are going to define the domain's models (Product and Cart). These models are identical in both applications.
 
@@ -252,7 +252,7 @@ export const cartService: ICart = {
 ```
 
 <a name="examData"></a>
-### Data access
+### Data access :newspaper:
 
 Also, we need to get a list of products. In most cases this data is obtained from http services, but we could also use graphql or any other library. Moreover, within http we could use fetch, axios, xhr...
 
@@ -357,7 +357,7 @@ export const productRepository: IProductRepository = {
 ```
 
 <a name="examViews"></a>
-### Views
+### Views :iphone: :computer:
 
 The view and layer to access to data are in infrastructure. However, they mustn't communicate directly. We are going to create a new service to consume our repository, so this data will available for the rest of our application.
 
@@ -623,7 +623,7 @@ The state's management of cart's elements is interesting, but it is something re
 Furthermore, if we pay atention to above code, we can see that all our code is decoupled. Our domain layer can be used both by react and by vue.
 
 <a name="examThird"></a>
-### Third party libraries
+### Third party libraries :hammer_and_wrench:
 
 Let's go to do a quick review about one library we have used, in this case axios. Our **domain** mustn't know anything about the existence of this library, I mean, we should be able to switch another library without affecting our **domain**.
 I'm going to explain step by step:
@@ -649,7 +649,7 @@ I'm going to explain step by step:
 Doing that, you have applied the dependency inversion principle, so now, you have a code low coupled, and with high cohesion.
 
 <a name="examTest"></a>
-### Tests
+### Tests :heavy_check_mark:
 
 Of course, one thing you can't miss are the tests. Tests are important, even crucial. Yes I know, maybe you are thinking...Why would I want to write test if I can try the system manually?.
 Well, it's very common that your application grow over time, so sure you will have to change some parts of your app. Then it becomes very tedious come back to test everything manually. Writing tests is the best way to be sure that our system works, and also, if some future changes have affected or broken our application.
@@ -714,7 +714,7 @@ test('Total cart price can not exceed 100 €', async () => {
 We could do more tests, but that is not the main purpose of this tutorial.
 
 <a name="finalWords"></a>
-## Final words
+## Final words :hugs:
 
 As we have seen, implementing a good architecture will allow us to improve the code maintenance. Also, we will be decoupled from the framework/library we are using, adding more value to the **domain**.
 
