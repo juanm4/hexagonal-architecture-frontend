@@ -1,0 +1,3 @@
+#.npmignore
+__test__
+infrastructure/views

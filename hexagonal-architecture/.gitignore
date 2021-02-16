@@ -1,0 +1,7 @@
+*.map
+*.js.map
+*.lock
+/node_modules
+/lib
+/src/domain/**/*.js
+/src/infrastructure/**/*.js

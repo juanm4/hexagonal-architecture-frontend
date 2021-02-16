@@ -1,0 +1,51 @@
+{
+    "name": "hexagonal-architecture",
+    "version": "1.0.0",
+    "description": "How to implement Hexagonal architecture in frontend (Javascript/Typescript)",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "keywords": [
+        "hexagonal",
+        "architecture",
+        "DDD",
+        "clean",
+        "SOLID",
+        "React",
+        "Vue"
+    ],
+    "scripts": {
+        "test": "jest --verbose src/__tests__",
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+        "lint": "eslint -c .eslintrc.js --ext .ts src"
+    },
+    "author": "juanm4@gmail.com",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/jest": "^26.0.20",
+        "@typescript-eslint/eslint-plugin": "^4.15.0",
+        "@typescript-eslint/parser": "^4.15.0",
+        "babel-plugin-module-resolver": "^4.1.0",
+        "babel-plugin-root-import": "^6.6.0",
+        "eslint": "^7.20.0",
+        "eslint-config-prettier": "^7.2.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-jest": "^24.1.3",
+        "eslint-plugin-json": "^2.1.2",
+        "eslint-plugin-prettier": "^3.3.1",
+        "prettier": "^2.2.1",
+        "prettier-eslint": "^12.0.0",
+        "ts-jest": "^26.5.1",
+        "ts-node": "^9.1.1",
+        "tslint": "^6.1.3",
+        "typescript": "^4.1.5"
+    },
+    "dependencies": {
+        "axios": "^0.21.1"
+    },
+    "files": [
+        "lib/**/*",
+        "package.json"
+    ]
+}

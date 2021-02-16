@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@domain/*": [
+                "../../../domain/*"
+            ],
+            "@infrastructure/*": [
+                "../../../infrastructure/*"
+            ]
+        }
+    }
+}
