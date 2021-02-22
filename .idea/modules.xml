@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/src/debug/debug.iml" filepath="$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/src/debug/debug.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/build/generated/source/generated.iml" filepath="$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/build/generated/source/generated.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/hexagonal-architecture-frontend.iml" filepath="$PROJECT_DIR$/.idea/hexagonal-architecture-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/src/main/main.iml" filepath="$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/build/generated/not_namespaced_r_class_sources/not_namespaced_r_class_sources.iml" filepath="$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/build/generated/not_namespaced_r_class_sources/not_namespaced_r_class_sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/build/generated/rncli/rncli.iml" filepath="$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/reactnative-ui/android/app/build/generated/rncli/rncli.iml" />
     </modules>
   </component>
 </project>

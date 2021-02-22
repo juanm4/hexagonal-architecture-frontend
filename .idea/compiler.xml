@@ -3,6 +3,8 @@
   <component name="TypeScriptCompiler">
     <option name="recompileOnChanges" value="true" />
     <option name="typeScriptCompilerParams" value="--sourceMap true" />
+    <option name="typeScriptServiceDirectory" value="$PROJECT_DIR$/hexagonal-architecture/src/infrastructure/views/react-ui/node_modules/typescript" />
     <option name="useConfig" value="true" />
+    <option name="versionType" value="SERVICE_DIRECTORY" />
   </component>
 </project>

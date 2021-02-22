@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@domain/*": [
+                "../../../domain/*"
+            ],
+            "@infrastructure/*": [
+                "../../../infrastructure/*"
+            ],
+            "@mocks/*": [
+                "../../../mocks/*"
+            ]
+        }
+    }
+}

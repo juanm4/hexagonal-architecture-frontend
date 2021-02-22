@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": [ "es5", "es6", "es7",
+            "es2015", "es2016",
+            "es2017", "es2018",
+            "esnext" ],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "jsx": "react",
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "forceConsistentCasingInFileNames": true,
+        "module": "esnext",
+        "resolveJsonModule": true,
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "typeRoots": [
+            "./node_modules/@types"
+        ],
+        "moduleResolution": "Node",
+        "noFallthroughCasesInSwitch": true,
+        "declaration": true,
+        "rootDir": "./src",
+        "outDir": "./lib",
+        "checkJs": false
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "./src/infrastructure/views/*"
+    ]
+}

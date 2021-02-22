@@ -1,0 +1,11 @@
+{
+    "plugins": [
+        ["module-resolver", {
+            "alias": {
+                "@domain": "./../../../domain",
+                "@infrastructure": "./../../../infrastructure",
+                "@mocks": "./../../../mocks"
+            }
+        }]
+    ]
+}
