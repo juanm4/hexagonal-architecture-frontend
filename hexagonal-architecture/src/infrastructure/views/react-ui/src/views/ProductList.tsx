@@ -1,8 +1,9 @@
-// src/infrastructure/views/ProductList.tsx
+// src/infrastructure/views/react-ui/src/views/ProductList.tsx
 
-import { Product } from '@domain/models/Product';
 import React, { useCallback } from 'react';
-import { productService } from '@domain/services/Product.service';
+import { Product } from '@domain/models/Product';
+import { productService } from '@domain/services/ProductService';
+import { productRepositoryFake } from '@infrastructure/instances/productRepositoryFake';
 
 interface ProductListProps {
     onSelectProduct: (product: Product) => void;
@@ -13,7 +14,7 @@ export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => 
 
     const getProducts = useCallback(async () => {
         try {
-            const responseProducts = await productService.getProducts();
+            const responseProducts = await productService(productRepositoryFake).getProducts();
             setProducts(responseProducts);
         } catch (exception) {
             console.error(exception);
@@ -21,7 +22,7 @@ export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => 
     }, []);
 
     React.useEffect(() => {
-        getProducts().then();
+        getProducts();
     }, []);
 
     const handleSelectProduct = (product: Product) => {

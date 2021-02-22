@@ -19,6 +19,7 @@ Table of contents:
     * [ Third party libraries ](#examThird)
     * [ Tests ](#examTest)
 11. [ Final words ](#final)
+12. [ Extra bonus ](#bonus)
 
 <a name="introduction"></a>
 ## Introduction :wave:
@@ -46,7 +47,7 @@ Inside this hexagon is where our base code is located. This part is called **dom
 
 Each side of this hexagon represent an interaction with an external service, for example: http services, db, rendering...
 
-<img src="https://gblobscdn.gitbook.com/assets%2F-MAffO8xa1ZWmgZvfeK2%2F-MBm5SHAQNSPhXT1tUUk%2F-MBmGI3OreGzXugbMmtM%2Fimage.png?alt=media&token=58e3d2c8-549c-4e14-a288-07eb9f008e8d" alt="hexagon" height=300 />
+<img src="./resources/hexagonal_architecture.png" style="background-color: white" alt="hexagon" height=300 />
 
 
 The communication between **domain** and the rest of actors is performed in the **infrastructure** layer. In this layer we implement a specific code for each of these technologies.
@@ -129,7 +130,7 @@ Once this is understood, we have to assume that tools highly coupled to these fr
 
 Now it's the show time, let's try to put all this theory into practice through an example. Let's write some code.
 
-Imagine that we have to design a shopping cart, and we have to do it both in "reactjs" and in "vuejs".
+Imagine that we have to design a shopping cart, and we have to do it in "reactjs", "vuejs" and "React Native".
 
 First, we think in which entities come into play, known that we will retrieve the data through a third party service (we will see that later).
 
@@ -153,18 +154,32 @@ Now imagine that we have the following business rules:
 
 Here we can see an example about how organize the directories, for both the "React" and "Vue" applications.
 
-<img src="./resources/directories_react.png" alt="Directories structure for hexagonal architecture in react js" height=300 />
-<img src="./resources/directories_vue.png" alt="Directories structure for hexagonal architecture in vue js" height=300 />
+<img src="./resources/directories.png.png" alt="Directories structure for hexagonal architecture" height=auto />
 
-In both cases we have created two directories: domain and infrastructure. All visual components are allocated inside infrastructure (remember that views and representations don't belong to our domain).
+Let me explain a little more what represent each folder.
+
+- **domain**
+    * **models** Here we have the models we will need, both types and interfaces of each model.
+    * **repositories**  All types and interfaces related with the repositories (a repository is in charge of bringing data from a web service, or a database, or a file...).
+    * **services** A service is responsible for interacting with our models and performing actions on them. For example to get the products or add a product to the cart.
+- **infrastructure**
+    * **http** Here are stored things related with our client, in this case a http client.
+        + **dto** All dto's that we receive from a repository.
+    * **instances** He we have created concrete instances for our client and repositories. You can see like the entry point of your system. Maybe this is not the best place for this folder, we have created in this way to use fake data since we do not have a web service.
+    * **repositories** Here we are defined the repositories we need to get products.
+    * **views** This folder store all related with our views. 
+        + **react-ui** React project that interact with our models and services.
+        + **reactnative-ui** React Native project that interact with our models and services.
+        + **vue-ui** Vue project that interact with our models and services.
+- **mocks** Here we have mock data that our client will use to provide concrete dto's with.
+- **test** All unit test for the use cases.
+
+We have created two directories: domain and infrastructure. All visual components are allocated inside infrastructure (remember that views and representations don't belong to our domain).
 
 <a name="examDomain"></a>
 ### Domain :shield:
 
-Now we are going to define the domain's models (Product and Cart). These models are identical in both applications.
-
-
-
+Now we are going to define the domain's models (Product and Cart) with the respective interfaces required.
 
 ```ts
 // src/domain/models/Product.ts
@@ -275,9 +290,9 @@ export interface ProductDTO {
 Furthermore, we have declared what methods we need implement for http. So, later we will be able to use our favourite client (fetch, axios...) implementing this interface:
 
 ```ts
-// src/infrastructure/http/http.d.ts
+// src/domain/repositories/Http.ts
 
-export interface IHttp {
+export interface Http {
     get: <T>(path: string, params?: Record<string, any>, config?: any) => Promise<T | any>;
     post: <T>(path: string, params?: Record<string, any>, config?: any) => Promise<T | any>;
     put: <T>(path: string, params?: Record<string, any>, config?: any) => Promise<T | any>;
@@ -286,19 +301,22 @@ export interface IHttp {
 
 ```
 
-Now it's time to create a wrapper for the library we have chosen, in our case, axios.
+Our client, which will be an instance that implements the `Http` interface, will be injected as a dependency to our repository. Thus, at any time, we will be able to change our client instantly. This technique is called dependency injection, and although it is not very common in javascript, it is very powerful and is there to be used. Typescript makes it very easy for us to do it.
 
+For this example we have created two clients (wrappers), one using axios, and the other will return a mock data.
+
+####Client for axios
 ```ts
-// src/infrastructure/http/httpAxios.ts
+// src/infrastructure/instances/httpAxios.ts
 
-import { IHttp } from './http';
 import axios from 'axios';
+import { Http } from '../../domain/repositories/Http';
 
 const headers = {
     'Content-Type': 'application/json'
 };
 
-export const httpAxios: IHttp = {
+export const httpAxios: Http = {
     get: async <T>(path: string, params?: Record<string, any>, config?: any) => {
         const response = await axios.get(path, { ...config, params: params, headers });
         return response.data as T;
@@ -316,45 +334,60 @@ export const httpAxios: IHttp = {
         return response.data as T;
     }
 };
+```
 
+####Client for data fake
+```ts
+// src/infrastructure/instances/httpAxios.ts
+
+import { Http } from '../../domain/repositories/Http';
+import { productListMock } from '../../mocks/products';
+
+export const httpFake: Http = {
+    get: async <T>(path: string, params?: Record<string, any>, config?: any) => {
+        const response = await productListMock;
+        return response;
+    },
+    post: async <T>(path: string, params?: Record<string, any>, config?: any) => {
+        const response = await productListMock;
+        return response;
+    },
+    put: async <T>(path: string, params?: Record<string, any>, config?: any) => {},
+    delete: async <T>(path: string, params?: any, config?: any) => {}
+};
 ```
 
 In this way, when you want to change the client and use, for example, fetch instead of axios, you can create a new http wrapper that implement the interface for http, but using fetch library. Easy!
 
 To finalize this part, we need a last thing. We have to create a repository for products inside infrastructure. This repository handle the request and, the transformation of response data to our domain model.
-For this example we have commented the line in which we call to API and, we have used a mock data.
 
 ```ts
-// src/infrastructure/repositories/product.repository.ts
+// src/infrastructure/repositories/productRepository.ts
 
 import { Product } from '../../domain/models/Product';
-import { httpAxios } from '../http/httpAxios';
-import {IHttp} from "../http/http";
-import {productListMock} from "../http/mocks/products";
+import { ProductRepository } from '../../domain/repositories/ProductRepository';
+import { Http } from '../../domain/repositories/Http';
+import { ProductDTO } from '../../infrastructure/http/dto/ProductDTO';
 
-export interface IProductRepository {
-    getProducts: () => Promise<Product[]>;
-    getProductsById: (id: string) => Promise<Product[]>;
-}
-
-// Here we can change the client by one that implement the IHttp interface
-const httpClient: IHttp = httpAxios;
-
-export const productRepository: IProductRepository = {
+export const productRepository = (client: Http): ProductRepository => ({
     getProducts: async () => {
-        //const products = await httpClient.get<ProductDTO[]>('http://localhost/products');
-        const products = productListMock;
+        const products = await client.get<ProductDTO>('');
         return products.map((productDto): Product => ({ id: productDto.id, title: productDto.title, price: productDto.price }));
     },
 
     getProductsById: async id => {
-        //const products = await httpClient.get<ProductDTO[]>('http://localhost/products', { id });
-        const products = productListMock;
+        const products = await client.get<ProductDTO>('', { id });
         return products.map((productDto): Product => ({ id: productDto.id, title: productDto.title, price: productDto.price }));
     }
-};
-
+});
 ```
+
+As you can see, `productRepository` is a function that receive a client as parameter (just here is the dependency injection).
+
+For convenience, we have created a fake repository that implement the interface `ProductRepository`.
+
+**Remember that production code mustn't contain any reference to fake or mock data. We are using it for making this project functional. For this reason, in production you must forget the `instances` folder.**
+
 
 <a name="examViews"></a>
 ### Views :iphone: :computer:
@@ -362,39 +395,45 @@ export const productRepository: IProductRepository = {
 The view and layer to access to data are in infrastructure. However, they mustn't communicate directly. We are going to create a new service to consume our repository, so this data will available for the rest of our application.
 
 ```ts
-// src/domain/services/Product.service.ts
+// src/domain/services/ProductService.ts
 
-import { IProductRepository, productRepository } from '../../infrastructure/repositories/product.repository';
+import { ProductRepository } from '../repositories/ProductRepository';
 
 // Here we can change the repository by one that implement the IProductRepository interface
-const repository: IProductRepository = productRepository;
+//const repository: IProductRepository = productRepository;
 
-export const productService: IProductRepository = {
+export const productService = (repository: ProductRepository): ProductRepository => ({
     getProducts: () => {
         return repository.getProducts();
     },
     getProductsById: id => {
         return repository.getProductsById(id);
     }
-};
-
+});
 ```
+
+As with our `Http` client, we are using dependecy injection in our service, which receive a repository as parameter. In this way, we will be able to change the repository at any time. (Maybe in the future, we have to obtain the products from a local database instead of a rest service). 
+
+---
 
 Well, now we have defined how to obtain the data, and the functionality we need to add/remove elements in our cart.
 
 Regardless of whether you use react or vue, note that the code wrote so far is common to both apps, so the call to our methods from our component will be the same.
 
+Inside views folder we have created as many projects as we have needed. In our case we have react, vue and react native.
+
+
 The first thing we are going to do know is define the initial state and, the functions to handle the cart state.
 
 #### React
 ```tsx
-// src/App.tsx
+// src/infrastructure/views/react-ui/src/App.tsx
 
 import React, { useState } from 'react';
-import { Cart } from './domain/models/Cart';
-import { Product } from './domain/models/Product';
-import { cartService } from './domain/services/Cart.service';
-import { ProductList } from './infrastructure/views/ProductList';
+import { ProductList } from './views/ProductList';
+import { Cart } from '@domain/models/Cart';
+import { Product } from '@domain/models/Product';
+import { cartService } from '@domain/services/CartService';
 
 const App = () => {
     const [cart, setCart] = useState<Cart>(cartService.createCart());
@@ -428,11 +467,11 @@ const App = () => {
                 <br />
                 <label>
                     <b>Total:</b>
-        </label>
-        <span>{totalCart} €</span>
-        <br />
-        </div>
-    );
+                </label>
+                <span>{totalCart} €</span>
+                <br />
+            </div>
+        );
         return cartProducts;
     };
 
@@ -447,13 +486,12 @@ const App = () => {
 };
 
 export default App;
-
 ```
 
 #### Vue
 ```vue
 <!--
-// src/App.vue
+// src/infrastructure/views/vue-ui/src/App.vue
 -->
 <template>
     <div id="app">
@@ -516,6 +554,94 @@ export default {
     }
 };
 </script>
+```
+
+#### React Native
+```tsx
+// src/infrastructure/views/reactnative-ui/App.tsx
+
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Button } from 'react-native';
+
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Cart } from '@domain/models/Cart';
+import { cartService } from '@domain/services/CartService';
+import { Product } from '@domain/models/Product';
+import { ProductList } from '@/components/ProductList';
+
+const App = () => {
+    const [cart, setCart] = useState<Cart>(cartService.createCart());
+
+    const handleAddToCart = (product: Product) => {
+        setCart(cartService.addProductToCart(cart, product));
+    };
+
+    const handleRemoveToCart = (product: Product) => {
+        setCart(cartService.removeProductFromCart(cart, product));
+    };
+
+    const renderCartProducts = (): JSX.Element[] => {
+        const cartProducts: JSX.Element[] = [];
+        let totalCart = 0;
+
+        cart.products.forEach(product => {
+            totalCart += product.price;
+            cartProducts.push(
+                <View style={styles.productInCart} key={product.id}>
+                    <Text>{product.title} </Text>
+                    <Text>({product.price} €) </Text>
+                    <Button color={'red'} onPress={() => handleRemoveToCart(product)} title={'remove'} />
+                </View>
+            );
+        });
+
+        cartProducts.push(
+            <View style={styles.productInCart} key={'total'}>
+                <Text>Total:</Text>
+                <Text> {totalCart} €</Text>
+            </View>
+        );
+        return cartProducts;
+    };
+
+    return (
+        <>
+            <StatusBar barStyle='default' />
+            <SafeAreaView>
+                <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.scrollView}>
+                    <Text style={styles.titlePage}>Shopping cart</Text>
+                    <Text style={styles.title}>Products in the car</Text>
+                    {renderCartProducts()}
+                    <ProductList onSelectProduct={handleAddToCart} />
+                </ScrollView>
+            </SafeAreaView>
+        </>
+    );
+};
+
+const styles = StyleSheet.create({
+    scrollView: {
+        backgroundColor: Colors.lighter
+    },
+    titlePage: {
+        fontWeight: 'bold',
+        margin: 5,
+        fontSize: 20
+    },
+    title: {
+        fontWeight: 'bold',
+        margin: 5
+    },
+    productInCart: {
+        flexDirection: 'row',
+        flex: 1,
+        alignContent: 'center',
+        alignItems: 'center',
+        margin: 10
+    }
+});
+
+export default App;
 
 ```
 
@@ -524,11 +650,12 @@ We are going to show the list of products.
 #### React
 
 ```tsx
-// src/infrastructure/views/ProductList.tsx
+// src/infrastructure/views/react-ui/src/views/ProductList.tsx
 
 import React, { useCallback } from 'react';
-import { Product } from '../../domain/models/Product';
-import { productService } from '../../domain/services/Product.service';
+import { Product } from '@domain/models/Product';
+import { productService } from '@domain/services/ProductService';
+import { productRepositoryFake } from '@infrastructure/instances/productRepositoryFake';
 
 interface ProductListProps {
     onSelectProduct: (product: Product) => void;
@@ -539,7 +666,7 @@ export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => 
 
     const getProducts = useCallback(async () => {
         try {
-            const responseProducts = await productService.getProducts();
+            const responseProducts = await productService(productRepositoryFake).getProducts();
             setProducts(responseProducts);
         } catch (exception) {
             console.error(exception);
@@ -547,7 +674,7 @@ export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => 
     }, []);
 
     React.useEffect(() => {
-        getProducts().then();
+        getProducts();
     }, []);
 
     const handleSelectProduct = (product: Product) => {
@@ -578,7 +705,7 @@ export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => 
 #### Vue
 ```vue
 <!--
-// src/infrastructure/components/ProductList.vue
+// src/infrastructure/views/vue-ui/src/views/ProductList.vue
 -->
 <template>
     <div>
@@ -592,8 +719,9 @@ export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => 
 </template>
 
 <script lang="ts">
-import { productService } from '@/domain/services/Product.service';
-import { Product } from '@/domain/models/Product';
+import { productService } from '@domain/services/ProductService';
+import { Product } from '@domain/models/Product';
+import { productRepositoryFake } from '@infrastructure/instances/productRepositoryFake';
 
 type DataProps = {
     products: Product[];
@@ -607,20 +735,92 @@ export default {
         };
     },
     mounted() {
-        productService.getProducts().then(response => (this.products = response));
+        productService(productRepositoryFake)
+            .getProducts()
+            .then(response => (this.products = response));
     },
     methods: {
         handleSelectProduct(product: Product) {
-            this.$emit('onSelectProduct', product);
+          this.$emit('onSelectProduct', product);
         }
     }
 };
 </script>
 ```
 
+####React Native
+```tsx
+// src/infrastructure/views/reactnative-ui/src/components/ProductList.tsx
+
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
+
+import { Product } from '@domain/models/Product';
+import { productService } from '@domain/services/ProductService';
+import { productRepositoryFake } from '@infrastructure/instances/productRepositoryFake';
+
+interface ProductListProps {
+    onSelectProduct: (product: Product) => void;
+}
+
+export const ProductList: React.FC<ProductListProps> = ({ onSelectProduct }) => {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    const getProducts = useCallback(async () => {
+        try {
+            const responseProducts = await productService(productRepositoryFake).getProducts();
+            setProducts(responseProducts);
+        } catch (exception) {
+            console.error(exception);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        getProducts();
+    }, []);
+
+    const handleSelectProduct = (product: Product) => {
+        onSelectProduct(product);
+    };
+
+    return (
+        <View>
+            <Text style={styles.title}>List of products</Text>
+            <View>
+                {products.map(product => (
+                    <View style={styles.buttonProduct} key={product.id}>
+                        <Button
+                            onPress={() => {
+                                handleSelectProduct(product);
+                            }}
+                            title={product.title}
+                        >
+                            <Text>{product.title}</Text>
+                        </Button>
+                    </View>
+                ))}
+            </View>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    title: {
+        fontWeight: 'bold',
+        margin: 5
+    },
+    buttonProduct: {
+        margin: 5
+    }
+});
+```
+
 The state's management of cart's elements is interesting, but it is something related with the data visualization and this management belongs to the technology we are using (React or Vue).
 
-Furthermore, if we pay atention to above code, we can see that all our code is decoupled. Our domain layer can be used both by react and by vue.
+Furthermore, if we pay attention to above code, we can see that all our code is decoupled. Our domain layer can be used by react, vue and react native.
+
+Also, here we can see the dependency injection in action.
+We use the product service, which receives a specific `ProductRepository` repository that, in turn, receives a specific `Http` client.
 
 <a name="examThird"></a>
 ### Third party libraries :hammer_and_wrench:
@@ -628,22 +828,22 @@ Furthermore, if we pay atention to above code, we can see that all our code is d
 Let's go to do a quick review about one library we have used, in this case axios. Our **domain** mustn't know anything about the existence of this library, I mean, we should be able to switch another library without affecting our **domain**.
 I'm going to explain step by step:
 
-- We have defined an interface `IProductRepository` that declare what methods have to be implemented by our repository.
+- We have defined an interface `ProductRepository` that declare what methods have to be implemented by our repository.
 
 
-- We have defined an interface `IHttp` that declare what methods have to be implemented by our web service.
+- We have defined an interface `Http` that declare what methods have to be implemented by our client (a web service in this case).
 
 
-- We have instantiated a `productRepository` that implement the interface `IProductRepository`.
+- We have instantiated a `productRepository` that implement the interface `ProductRepository`.
 
 
-- We have instantiated a `httpAxios` that implement the interface `IHttp`.
+- We have instantiated a `httpAxios` that implement the interface `Http`.
 
 
-- Our `productRepository` instance uses an instance of `httpAxios`. If at any time you want to change the http library, for example, to fetch, you only have to write another client that implement the interface `Ihttp`
+- Our `productRepository` instance uses an instance of `httpAxios`. If at any time you want to change the http library, for example, to fetch, you only have to write another client that implement the interface `Http` and pass it to the repository.
 
 
-- Even if at any point you want to change the product repository, you could write another client that implement the interface `IProductRepository`.
+- Even if at any point you want to change the repository, for example to a local database, you could write another repository that implement the interface `ProductRepository`.
 
 
 Doing that, you have applied the dependency inversion principle, so now, you have a code low coupled, and with high cohesion.
@@ -656,6 +856,14 @@ Well, it's very common that your application grow over time, so sure you will ha
 
 Keep that in mind, many people have a percentage of test coverage above which they consider it sufficient. What do you think? Perhaps an 80% is right? Well, then you have a 20% of your system that can fail. There are no excuse to do things well, the only percentage of test coverage which ensures that our application works as you want is 100%.
 
+Even if you have a 100% of code coverage, it doesn't assure you that you are covering all the cases.
+Here a little example:
+
+`if (a > 1) ? 'Hi' : 'Bye'`
+
+In this case you can make a test that check it return `Hi`, but if you don't test the return of `Bye` you have a 100% of coverage, but your code is not completely tested.
+**So, please, pay attention to all cases and try to do smart tests.**
+
 Yes, I was one of them. I have written code without tests, but not because I didn't want to do tests, the problem was that having all the code scattered and mixed with the views, it was difficult if not impossible to write tests.
 
 So, let's go write some test. You will see how easy is writing test after having implemented an appropriate architecture...having **domain** separated from **infrastructure**
@@ -665,50 +873,45 @@ To do test we use `jest`. From my point of view is the ultimate library to do te
 First we are going to take the business rules (described in the introduction of this example, see above), and we are going to test each of them.
 
 ```ts
-// src/__tests__/cart.test.ts
+// src/tests/cart.test.ts
 
-import { productService } from '../domain/services/Product.service';
-import { cartService } from '../domain/services/Cart.service';
+import { cartService } from '../domain/services/CartService';
+import { Product } from '../domain/models/Product';
 
-test('Car can not contain more than 5 products', async () => {
+const anyProduct = (id: string, price: number): Product => ({
+    id,
+    title: 'Any title',
+    price
+});
+
+test('A car can not contain more than 5 products', async () => {
     const cart = cartService.createCart();
-    const products = await productService.getProducts();
 
-    cartService.addProductToCart(cart, products[0]);
-    cartService.addProductToCart(cart, products[1]);
-    cartService.addProductToCart(cart, products[2]);
-    cartService.addProductToCart(cart, products[3]);
-    cartService.addProductToCart(cart, products[4]);
+    cartService.addProductToCart(cart, anyProduct('1', 0));
+    cartService.addProductToCart(cart, anyProduct('2', 0));
+    cartService.addProductToCart(cart, anyProduct('3', 0));
+    cartService.addProductToCart(cart, anyProduct('4', 0));
+    cartService.addProductToCart(cart, anyProduct('5', 0));
+    cartService.addProductToCart(cart, anyProduct('6', 0));
     expect(cart.products.length).toEqual(5);
-
-    cartService.addProductToCart(cart, products[5]);
-    expect(cart.products.length).toEqual(5);
 });
 
-test('Add same product to cart', async () => {
+test('If I add a product and it already exist in the cart, the product will not be added', async () => {
     const cart = cartService.createCart();
-    const products = await productService.getProducts();
 
-    cartService.addProductToCart(cart, products[0]);
+    cartService.addProductToCart(cart, anyProduct('1', 0));
+    cartService.addProductToCart(cart, anyProduct('1', 0));
     expect(cart.products.length).toEqual(1);
-
-    cartService.addProductToCart(cart, products[0]);
-    expect(cart.products.length).toEqual(1);
-
-    cartService.addProductToCart(cart, products[1]);
-    expect(cart.products.length).toEqual(2);
 });
 
-test('Total cart price can not exceed 100 €', async () => {
+test('If I add a product and it will exceed 100€, the product will not be added', async () => {
     const cart = cartService.createCart();
-    const products = await productService.getProducts();
 
-    cartService.addProductToCart(cart, products[6]);
-    expect(cart.products.length).toEqual(1);
-
-    cartService.addProductToCart(cart, products[5]);
+    cartService.addProductToCart(cart, anyProduct('1', 50));
+    cartService.addProductToCart(cart, anyProduct('2', 60));
     expect(cart.products.length).toEqual(1);
 });
+
 ```
 
 We could do more tests, but that is not the main purpose of this tutorial.
@@ -728,3 +931,26 @@ If you have any doubt you can contact me through my email or leaving a comment h
 If you liked it share it...and remember:
 
 WE RULE THE WORLD!
+
+<a name="bonus"></a>
+## What does include this project? (Extra bonus) :heart:
+
+- This project is ready to use, you can download and execute it.
+
+
+- I hate relatives routes, they make code hard to follow. So this project prepared to use relative paths using `@alias` in `tsconfig.json` and `babel-plugin-module-resolver`.
+
+
+- Code formatted with `eslint` and `prettier`.
+  
+
+- To execute react project go to `src/infrastructure/views/react-ui/` and execute `npm install && npm run start`.
+
+
+- To execute vue project go to `src/infrastructure/views/vue-ui/` and execute `npm install && npm run serve`.
+
+
+- To execute react native project go to `src/infrastructure/views/reactnative-ui/` and execute `npm install && npm run start`. Then execute `npm run android`.
+
+
+- All configuration files are included. Take a look at them.

@@ -15,7 +15,8 @@ module.exports = {
     },
     "rules": {
         "@typescript-eslint/interface-name-prefix": 'Off',
-        "@typescript-eslint/no-var-requires": 'Off'
+        "@typescript-eslint/no-var-requires": 'Off',
+        "@typescript-eslint/no-empty-function": 'Off'
     },
     "overrides": [
         {

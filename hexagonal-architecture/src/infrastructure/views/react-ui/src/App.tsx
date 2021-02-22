@@ -1,10 +1,10 @@
-// src/App.tsx
+// src/infrastructure/views/react-ui/src/App.tsx
 
 import React, { useState } from 'react';
 import { ProductList } from './views/ProductList';
 import { Cart } from '@domain/models/Cart';
-import { cartService } from '@domain/services/Cart.service';
 import { Product } from '@domain/models/Product';
+import { cartService } from '@domain/services/CartService';
 
 const App = () => {
     const [cart, setCart] = useState<Cart>(cartService.createCart());

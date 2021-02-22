@@ -1,5 +1,5 @@
 <!--
-// src/infrastructure/components/ProductList.vue
+// src/infrastructure/views/vue-ui/src/views/ProductList.vue
 -->
 <template>
     <div>
@@ -13,8 +13,9 @@
 </template>
 
 <script lang="ts">
-import { productService } from '@domain/services/Product.service';
+import { productService } from '@domain/services/ProductService';
 import { Product } from '@domain/models/Product';
+import { productRepositoryFake } from '@infrastructure/instances/productRepositoryFake';
 
 type DataProps = {
     products: Product[];
@@ -28,7 +29,9 @@ export default {
         };
     },
     mounted() {
-        productService.getProducts().then(response => (this.products = response));
+        productService(productRepositoryFake)
+            .getProducts()
+            .then(response => (this.products = response));
     },
     methods: {
         handleSelectProduct(product: Product) {

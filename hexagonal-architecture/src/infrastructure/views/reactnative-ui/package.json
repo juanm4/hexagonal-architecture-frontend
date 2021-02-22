@@ -1,0 +1,57 @@
+{
+    "name": "reactnativeui",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "android": "react-native run-android",
+        "ios": "react-native run-ios",
+        "start": "react-native start",
+        "test": "jest",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "restart-cache-sh": "rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-* && watchman watch-del-all && rm -rf node_modules/ && npm install && npm start -- --reset-cache"
+    },
+    "dependencies": {
+        "axios": "^0.21.1",
+        "react": "16.13.1",
+        "react-native": "0.63.4",
+        "react-native-cli": "^2.0.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.8.4",
+        "@babel/runtime": "^7.8.4",
+        "@react-native-community/eslint-config": "^1.1.0",
+        "@types/jest": "^25.2.3",
+        "@types/react-native": "^0.63.2",
+        "@types/react-test-renderer": "^16.9.2",
+        "babel-jest": "^25.1.0",
+        "babel-plugin-module-resolver": "^4.1.0",
+        "babel-plugin-root-import": "^6.6.0",
+        "eslint": "^6.5.1",
+        "eslint-loader": "^4.0.2",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-jest": "^24.1.3",
+        "eslint-plugin-json": "^2.1.2",
+        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-react": "^7.22.0",
+        "jest": "^25.1.0",
+        "metro-react-native-babel-preset": "^0.59.0",
+        "prettier": "^2.2.1",
+        "prettier-eslint": "^12.0.0",
+        "react-test-renderer": "16.13.1",
+        "typescript": "^3.8.3"
+    },
+    "resolutions": {
+        "@types/react": "^16"
+    },
+    "jest": {
+        "preset": "react-native",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ]
+    }
+}

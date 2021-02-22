@@ -3,7 +3,8 @@
         ["module-resolver", {
             "alias": {
                 "@domain": "./../../../domain",
-                "@infrastructure": "./../../../infrastructure"
+                "@infrastructure": "./../../../infrastructure",
+                "@mocks": "./../../../mocks"
             }
         }]
     ]

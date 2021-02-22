@@ -1,5 +1,5 @@
 <!--
-// src/App.vue
+// src/infrastructure/views/vue-ui/src/App.vue
 -->
 <template>
     <div id="app">
@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { Cart } from '@domain/models/Cart';
-import { cartService } from '@domain/services/Cart.service';
+import { cartService } from '@domain/services/CartService';
 import { Product } from '@domain/models/Product';
 import ProductList from '@/views/ProductList.vue';
 

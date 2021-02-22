@@ -33,7 +33,6 @@
     ],
     "exclude": [
         "node_modules",
-        "**/__tests__/*",
         "./src/infrastructure/views/*"
     ]
 }

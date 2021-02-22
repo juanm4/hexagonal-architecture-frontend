@@ -14,7 +14,7 @@
         "Vue"
     ],
     "scripts": {
-        "test": "jest --verbose src/__tests__",
+        "test": "jest --verbose ./src/tests",
         "build": "tsc",
         "watch": "tsc --watch",
         "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
