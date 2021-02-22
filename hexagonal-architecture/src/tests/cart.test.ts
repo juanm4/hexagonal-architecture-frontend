@@ -9,7 +9,7 @@ const anyProduct = (id: string, price: number): Product => ({
     price
 });
 
-test('A car can not contain more than 5 products', async () => {
+test('If I add more than five products, the sixth will not be added', async () => {
     const cart = cartService.createCart();
 
     cartService.addProductToCart(cart, anyProduct('1', 0));
