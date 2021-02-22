@@ -19,7 +19,7 @@ Table of contents:
     * [ Third party libraries ](#examThird)
     * [ Tests ](#examTest)
 11. [ Final words ](#final)
-12. [ Extra bonus ](#bonus)
+12. [ What does include this project? (Extra bonus) ](#bonus)
 
 <a name="introduction"></a>
 ## Introduction :wave:
