@@ -154,7 +154,7 @@ Now imagine that we have the following business rules:
 
 Here we can see an example about how organize the directories, for both the "React" and "Vue" applications.
 
-<img src="./resources/directories.png.png" alt="Directories structure for hexagonal architecture" height=auto />
+<img src="./resources/directories.png" alt="Directories structure for hexagonal architecture" height=auto />
 
 Let me explain a little more what represent each folder.
 
