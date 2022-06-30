@@ -305,7 +305,7 @@ Our client, which will be an instance that implements the `Http` interface, will
 
 For this example we have created two clients (wrappers), one using axios, and the other will return a mock data.
 
-####Client for axios
+#### Client for axios
 ```ts
 // src/infrastructure/instances/httpAxios.ts
 
@@ -336,7 +336,7 @@ export const httpAxios: Http = {
 };
 ```
 
-####Client for data fake
+#### Client for data fake
 ```ts
 // src/infrastructure/instances/httpAxios.ts
 
@@ -748,7 +748,7 @@ export default {
 </script>
 ```
 
-####React Native
+#### React Native
 ```tsx
 // src/infrastructure/views/reactnative-ui/src/components/ProductList.tsx
 
