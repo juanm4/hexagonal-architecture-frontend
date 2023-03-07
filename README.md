@@ -338,7 +338,7 @@ export const httpAxios: Http = {
 
 #### Client for data fake
 ```ts
-// src/infrastructure/instances/httpAxios.ts
+// src/infrastructure/instances/httpFake.ts
 
 import { Http } from '../../domain/repositories/Http';
 import { productListMock } from '../../mocks/products';
