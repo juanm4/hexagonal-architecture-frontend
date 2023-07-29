@@ -423,7 +423,7 @@ Regardless of whether you use react or vue, note that the code wrote so far is c
 Inside views folder we have created as many projects as we have needed. In our case we have react, vue and react native.
 
 
-The first thing we are going to do know is define the initial state and, the functions to handle the cart state.
+The first thing we are going to do now is define the initial state and, the functions to handle the cart state.
 
 #### React
 ```tsx
