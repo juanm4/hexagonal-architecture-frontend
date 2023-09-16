@@ -1,4 +1,4 @@
-const { aliasDangerous } = require('react-app-rewire-alias/lib/aliasDangerous');
+const { aliasWebpack } = require('react-app-alias-ex');
 
 const aliasMap = {
     '@domain': '../../../domain',
@@ -6,4 +6,6 @@ const aliasMap = {
     '@mocks': '../../../mocks'
 };
 
-module.exports = aliasDangerous(aliasMap);
+module.exports = aliasWebpack({
+    alias: aliasMap
+});
