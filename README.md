@@ -108,7 +108,7 @@ The use cases of the app do belong to the **domain**, and they shouldn't know ho
 For example, suppose you are developing a shopping cart. One use case could be: "A shopping cart can not have more than 10 products".
 Another use case: "A shopping cart can not have the same product twice or more". We can see the use cases as requirements in our application.
 
-The data requests to backend belong to **infrastructure** layer, and it is something that our app doesn't need to know, even if we manage the backend (it is a different applications and has different architecture needs. At some point, the data scheme of backend could change, and we don't want to our app can be affected by that.
+The data requests to backend belong to **infrastructure** layer, and it is something that our app doesn't need to know, even if we manage the backend (it is a different applications and has different architecture needs). At some point, the data scheme of backend could change, and we don't want to our app can be affected by that.
 
 Another part that belong to **infrastructure** is the management of local data, like session data, cookies or local databases. Of course, we have to deal with this, but it is not part of our **domain**.
 
@@ -167,7 +167,7 @@ Let me explain a little more what represent each folder.
         + **dto** All dto's that we receive from a repository.
     * **instances** He we have created concrete instances for our client and repositories. You can see like the entry point of your system. Maybe this is not the best place for this folder, we have created in this way to use fake data since we do not have a web service.
     * **repositories** Here we are defined the repositories we need to get products.
-    * **views** This folder store all related with our views. 
+    * **views** This folder store all related with our views.
         + **react-ui** React project that interact with our models and services.
         + **reactnative-ui** React Native project that interact with our models and services.
         + **vue-ui** Vue project that interact with our models and services.
@@ -338,7 +338,7 @@ export const httpAxios: Http = {
 
 #### Client for data fake
 ```ts
-// src/infrastructure/instances/httpAxios.ts
+// src/infrastructure/instances/httpFake.ts
 
 import { Http } from '../../domain/repositories/Http';
 import { productListMock } from '../../mocks/products';
@@ -412,7 +412,7 @@ export const productService = (repository: ProductRepository): ProductRepository
 });
 ```
 
-As with our `Http` client, we are using dependecy injection in our service, which receive a repository as parameter. In this way, we will be able to change the repository at any time. (Maybe in the future, we have to obtain the products from a local database instead of a rest service). 
+As with our `Http` client, we are using dependecy injection in our service, which receive a repository as parameter. In this way, we will be able to change the repository at any time. (Maybe in the future, we have to obtain the products from a local database instead of a rest service).
 
 ---
 
@@ -942,7 +942,7 @@ WE RULE THE WORLD!
 
 
 - Code formatted with `eslint` and `prettier`.
-  
+
 
 - To execute react project go to `src/infrastructure/views/react-ui/` and execute `npm install && npm run start`.
 
