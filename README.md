@@ -145,7 +145,7 @@ We also know these entities must be available for the user, so that the user can
 
 Now imagine that we have the following business rules:
 
-- A shopping car can not have more than 5 products
+- A shopping cart can not have more than 5 products
 - The same product can not be in the cart twice or more
 - The maximum price of the cart must be 100 €
 
@@ -884,7 +884,7 @@ const anyProduct = (id: string, price: number): Product => ({
     price
 });
 
-test('A car can not contain more than 5 products', async () => {
+test('A cart can not contain more than 5 products', async () => {
     const cart = cartService.createCart();
 
     cartService.addProductToCart(cart, anyProduct('1', 0));
